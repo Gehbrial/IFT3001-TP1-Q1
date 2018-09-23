@@ -8,60 +8,33 @@ void division(const Polynome& dividende, // Le polynome qui est divise
 	      Polynome& reste) {	   // Parametre de sortie: le reste de la division
 
   assert(diviseur.degre() > 0 || diviseur.coefficient(0).numerateur() != 0); // Pas de division par zero
-  assert(dividende > diviseur); // Le degré du dividende doit être plus grand que celui du diviseur
+  assert(dividende >= diviseur); // Le degré du dividende doit être plus grand que celui du diviseur
 
-  Polynome q = Polynome(); // Quotient retourné
-  Polynome r = Polynome(); // Reste retourné
+  auto degre_dividende = (unsigned) dividende.degre();
+  auto degre_diviseur = (unsigned) diviseur.degre();
 
-  // Si nous avons terminé de simplifier la division
-  bool termine = false;
+  // Coéfficient du terme à ajouter au quotient de retour
+  Rationnel coeff_terme = dividende.coefficient(degre_dividende) / diviseur.coefficient(degre_diviseur);
 
-  int i = 0;
+  // Degré du terme à ajouter au quotient de retour
+  unsigned int degre_terme = degre_dividende - degre_diviseur;
 
-  // Si le dividende est nul, alors forcément les paramètres de retour sont nuls
-  if (dividende.degre() != -1) {
-      auto copie_dividende = Polynome(dividende);
-      auto degre_diviseur = (unsigned) diviseur.degre();
+  quotient = quotient + Polynome(coeff_terme, degre_terme);
 
-      while(!termine) {
-          auto degre_dividende = (unsigned) copie_dividende.degre();
+  // Résultat du produit entre le diviseur et le terme trouvé
+  Polynome produit_terme = diviseur.multiplication_par_monome(coeff_terme, degre_terme);
 
-          // Coéfficient du terme à ajouter au quotient de retour
-          Rationnel coeff_terme = copie_dividende.coefficient(degre_dividende) / diviseur.coefficient(degre_diviseur);
+  // Résultat de la soustraction du produit au dividende
+  Polynome resultat_soustraction = dividende - produit_terme;
 
-          // Degré du terme à ajouter au quotient de retour
-          unsigned int degre_terme = degre_dividende - degre_diviseur;
+  int degre_resultat = resultat_soustraction.degre();
 
-          q = q + Polynome(coeff_terme, degre_terme);
-
-          // Résultat du produit entre le diviseur et le terme trouvé
-          Polynome produit_terme = diviseur.multiplication_par_monome(coeff_terme, degre_terme);
-
-          // Résultat de la soustraction du produit au dividende actuel
-          Polynome resultat_soustraction = copie_dividende - produit_terme;
-
-          int degre_resultat = resultat_soustraction.degre();
-
-          i++;
-
-          // On ne peut plus simplifier -> On retourne le résultat de la soustraction comme reste
-          if (degre_diviseur > degre_resultat) {
-              r = resultat_soustraction;
-              termine = true;
-          }
-          // Le résultat de la soustraction est nulle -> On a fini de simplifier
-          else if (degre_resultat == -1) {
-              termine = true;
-          }
-          // Le dividende devient le résultat de la soustraction et on poursuit le traitement
-          else {
-              copie_dividende = resultat_soustraction;
-          }
-      }
+  if (degre_diviseur > degre_resultat) {
+      reste = resultat_soustraction;
   }
-
-  quotient = q;
-  reste = r;
+  else if (degre_resultat != -1) {
+      division(resultat_soustraction, diviseur, quotient, reste);
+  }
 }
 
 Polynome plus_grand_commun_diviseur(const Polynome& a, const Polynome& b) {
