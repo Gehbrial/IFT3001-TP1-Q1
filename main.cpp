@@ -16,12 +16,14 @@ bool test_generique_division(const std::string& nom_du_test,
   out << "Execution du test " << nom_du_test << std::endl;
   Polynome quotient;
   Polynome reste;
+  int i = 0;
 
   out << "  Entree Dividende: " << dividende << std::endl;
   out << "  Entree Diviseur:  " << diviseur << std::endl;
-  division(dividende, diviseur, quotient, reste);
+  division(dividende, diviseur, quotient, reste, i);
   out << "  Sortie Quotient:  " << quotient << std::endl;
   out << "  Sortie Reste:     " << reste << std::endl;
+  out << "  Nombre d'opérations élémentaires:" << i << std::endl;
   
   const bool resultat = (quotient * diviseur + reste == dividende) && (reste < diviseur);
   if (resultat) {
@@ -56,9 +58,11 @@ bool test_generique_plus_grand_commun_diviseur(const std::string& nom_du_test,
     return false;
   }
 
+  int i = 0;
+
   Polynome quotient_a, quotient_b, reste_a, reste_b;
-  division(a, pgcd, quotient_a, reste_a);
-  division(b, pgcd, quotient_b, reste_b);
+  division(a, pgcd, quotient_a, reste_a, i);
+  division(b, pgcd, quotient_b, reste_b, i);
   Polynome pgcd_des_quotients = plus_grand_commun_diviseur(quotient_a, quotient_b);
 
   bool resultat = true;

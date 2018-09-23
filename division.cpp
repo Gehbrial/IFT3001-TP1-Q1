@@ -5,7 +5,9 @@
 void division(const Polynome& dividende, // Le polynome qui est divise
 	      const Polynome& diviseur,  // Le polynome qui divise
 	      Polynome& quotient,	   // Parametre de sortie: le resultat de la division
-	      Polynome& reste) {	   // Parametre de sortie: le reste de la division
+	      Polynome& reste,
+	      int & i
+	      ) {	   // Parametre de sortie: le reste de la division
 
   assert(diviseur.degre() > 0 || diviseur.coefficient(0).numerateur() != 0); // Pas de division par zero
   assert(dividende >= diviseur); // Le degré du dividende doit être plus grand que celui du diviseur
@@ -18,6 +20,7 @@ void division(const Polynome& dividende, // Le polynome qui est divise
 
   // Degré du terme à ajouter au quotient de retour
   unsigned int degre_terme = degre_dividende - degre_diviseur;
+  i++;
 
   quotient = quotient + Polynome(coeff_terme, degre_terme);
 
@@ -33,7 +36,7 @@ void division(const Polynome& dividende, // Le polynome qui est divise
       reste = resultat_soustraction;
   }
   else if (degre_resultat != -1) {
-      division(resultat_soustraction, diviseur, quotient, reste);
+      division(resultat_soustraction, diviseur, quotient, reste, i);
   }
 }
 
@@ -48,7 +51,9 @@ Polynome plus_grand_commun_diviseur(const Polynome& a, const Polynome& b) {
       auto quotient = Polynome();
       auto reste = Polynome();
 
-      division(m, n, quotient, reste);
+      int i = 0;
+
+      division(m, n, quotient, reste, i);
 
       m.swap(n);
       n.swap(reste);
