@@ -41,6 +41,18 @@ Polynome plus_grand_commun_diviseur(const Polynome& a, const Polynome& b) {
   assert(a >= b);
   assert(a.degre() > 0 || a.coefficient(0).numerateur() != 0);
 
-  // INSEREZ VOTRE CODE ICI
-  return Polynome();
+  auto m = Polynome(a);
+  auto n = Polynome(b);
+
+  while(n.degre() != -1) {
+      auto quotient = Polynome();
+      auto reste = Polynome();
+
+      division(m, n, quotient, reste);
+
+      m.swap(n);
+      n.swap(reste);
+  }
+
+  return m;
 }
