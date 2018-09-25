@@ -91,6 +91,15 @@ bool test_generique_plus_grand_commun_diviseur(const std::string& nom_du_test,
   return resultat;
 }
 
+bool test_1() {
+    Rationnel coefficients_dividence[4] = {Rationnel(1), Rationnel(2), Rationnel(3), Rationnel(4)};
+    Rationnel coefficients_diviseur[2] = {Rationnel(1), Rationnel(2)};
+
+    Polynome dividende(std::vector<Rationnel>(coefficients_dividence, coefficients_dividence + 4));
+    Polynome quotient(std::vector<Rationnel>(coefficients_diviseur, coefficients_diviseur + 2));
+    return test_generique_division("Test #1", dividende, quotient);
+}
+
 // (x^3 + 2x + 1) / (x + 1) = x^2 - x + 3 reste -2
 bool test_instance_vue_en_classe() {
   Rationnel coefficients_dividence[4] = {Rationnel(1), Rationnel(2), Rationnel(0), Rationnel(1)};
@@ -172,6 +181,7 @@ bool test_statistique(unsigned int degre,
 }
 
 int main(void) {
+    test_1();
   test_instance_vue_en_classe();
   test_avec_reste_nul();
   test_division_par_un_entier();
